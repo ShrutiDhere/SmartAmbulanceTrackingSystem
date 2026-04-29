@@ -1,0 +1,23 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* MAP MUST HAVE HEIGHT */
+#map {
+  height: 100vh;
+  width: 100%;
+}
+
+/* SIMPLE HEADER */
+.header {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 1000;
+}

@@ -1,0 +1,71 @@
+# ===============================
+# Java / Spring Boot
+# ===============================
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+target/
+build/
+out/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Gradle
+.gradle/
+build/
+
+# ===============================
+# Eclipse IDE
+# ===============================
+.metadata/
+.classpath
+.project
+.settings/
+Servers/
+RemoteSystemsTempFiles/
+
+# ===============================
+# IntelliJ IDEA (if used later)
+# ===============================
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# ===============================
+# VS Code
+# ===============================
+.vscode/
+
+# ===============================
+# OS files
+# ===============================
+.DS_Store
+Thumbs.db
+
+# ===============================
+# Logs & temp files
+# ===============================
+*.tmp
+*.bak
+*.swp
+
+# ===============================
+# Environment / secrets
+# ===============================
+.env
+application-local.properties
+application-dev.properties
+
+# ===============================
+# Node (if frontend added later)
+# ===============================
+node_modules/
+npm-debug.log*
+dist/
