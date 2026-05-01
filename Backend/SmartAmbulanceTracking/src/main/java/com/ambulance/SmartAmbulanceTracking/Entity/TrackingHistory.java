@@ -1,25 +1,23 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-public class Ambulance {
+public class TrackingHistory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String vehicleNumber;
-
-	@Enumerated(EnumType.STRING)
-	private AmbulanceStatus status;
-
 	private double latitude;
 	private double longitude;
 	private double speed;
 
+	private LocalDateTime timestamp;
+
 	@ManyToOne
-	private Driver driver;
+	private Ambulance ambulance;
 
 	// Getters & Setters
 
@@ -29,22 +27,6 @@ public class Ambulance {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getVehicleNumber() {
-		return vehicleNumber;
-	}
-
-	public void setVehicleNumber(String vehicleNumber) {
-		this.vehicleNumber = vehicleNumber;
-	}
-
-	public AmbulanceStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(AmbulanceStatus status) {
-		this.status = status;
 	}
 
 	public double getLatitude() {
@@ -71,11 +53,19 @@ public class Ambulance {
 		this.speed = speed;
 	}
 
-	public Driver getDriver() {
-		return driver;
+	public LocalDateTime getTimestamp() {
+		return timestamp;
 	}
 
-	public void setDriver(Driver driver) {
-		this.driver = driver;
+	public void setTimestamp(LocalDateTime timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public Ambulance getAmbulance() {
+		return ambulance;
+	}
+
+	public void setAmbulance(Ambulance ambulance) {
+		this.ambulance = ambulance;
 	}
 }

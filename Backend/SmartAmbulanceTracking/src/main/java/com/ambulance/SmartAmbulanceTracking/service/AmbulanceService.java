@@ -1,5 +1,11 @@
-package com.ambulance.SmartAmbulanceTracking.service;
+package com.ambulance.SmartAmbulanceTracking.Service;
 
-public class AmbulanceService {
+import java.util.List;
 
+import com.ambulance.SmartAmbulanceTracking.Entity.Ambulance;
+
+public interface AmbulanceService {
+    List<Ambulance> getAll();
+    Ambulance updateStatus(Long id, String status);
+    List<Ambulance> findNearby(double lat, double lng);
 }

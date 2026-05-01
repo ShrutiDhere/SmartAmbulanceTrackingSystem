@@ -1,20 +1,69 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
- 
+
 import jakarta.persistence.*;
 
 @Entity
 public class Patient {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
-    private int age;
+	private String name;
+	private int age;
 
-    private String patientCondition;  // ✅ FIXED
+	private String conditionType;
+	private String emergencyLevel;
 
-    private String pickupLocation;
+	private String vitals;
 
-    // getters and setters
+	// Getters & Setters
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getConditionType() {
+		return conditionType;
+	}
+
+	public void setConditionType(String conditionType) {
+		this.conditionType = conditionType;
+	}
+
+	public String getEmergencyLevel() {
+		return emergencyLevel;
+	}
+
+	public void setEmergencyLevel(String emergencyLevel) {
+		this.emergencyLevel = emergencyLevel;
+	}
+
+	public String getVitals() {
+		return vitals;
+	}
+
+	public void setVitals(String vitals) {
+		this.vitals = vitals;
+	}
 }

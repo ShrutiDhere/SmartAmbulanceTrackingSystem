@@ -1,5 +1,5 @@
-package com.ambulance.SmartAmbulanceTracking.service;
+package com.ambulance.SmartAmbulanceTracking.Service;
 
-public class TrackingService {
-
+public interface TrackingService {
+    void updateLocation(Long ambulanceId, double lat, double lng, double speed);
 }
