@@ -1,14 +1,33 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MapPage from "./pages/MapPage";
+﻿import { BrowserRouter, useLocation } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
+import AppRoutes from "./routes/AppRoutes";
+import ToastNotification from "./components/ToastNotification";
+import "./styles/auth.css";
+
+function AppContent() {
+  const location = useLocation();
+  const hideNavbar = ["/login", "/register", "/forgot-password"].includes(location.pathname);
+  const isFullPage = location.pathname === "/track" || location.pathname === "/live-tracking";
+
+  return (
+    <>
+      {!hideNavbar && <Navbar />}
+      <main className={`app-shell ${isFullPage ? "app-shell-full" : ""}`}>
+        <AppRoutes />
+      </main>
+    </>
+  );
+}
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MapPage />} />
-        <Route path="/map" element={<MapPage />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <AppContent />
+        <ToastNotification />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

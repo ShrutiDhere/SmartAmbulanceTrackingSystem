@@ -1,0 +1,169 @@
+.auth-container{
+    width:100%;
+    max-width:1400px;
+    margin:auto;
+
+    display:grid;
+    grid-template-columns:1fr 550px;
+
+    gap:80px;
+    align-items:center;
+
+    position:relative;
+    z-index:2;
+}
+
+.auth-panel{
+    width:100%;
+    max-width:550px;
+
+    background:rgba(7,20,65,.92);
+
+    border-radius:32px;
+
+    padding:50px;
+
+    backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:
+      0 20px 60px rgba(0,0,0,.45);
+}
+
+.auth-form{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.form-label{
+    color:white;
+    font-size:15px;
+    font-weight:600;
+}
+
+.input-wrapper{
+    position:relative;
+}
+
+.input-icon{
+    position:absolute;
+    left:20px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.form-control{
+    width:100%;
+    height:64px;
+
+    padding-left:65px;
+    padding-right:60px;
+
+    border-radius:18px;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:17px;
+}
+
+.form-control:focus{
+    outline:none;
+
+    border-color:#ff5d6d;
+
+    box-shadow:
+      0 0 0 4px rgba(255,95,109,.15);
+}
+
+.password-toggle{
+    position:absolute;
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+
+    background:none;
+    border:none;
+    color:white;
+}
+
+.btn-danger{
+    height:64px;
+
+    border:none;
+
+    border-radius:18px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #ff5f6d,
+        #ff8e53
+      );
+
+    font-size:18px;
+
+    font-weight:700;
+}
+
+.auth-header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.auth-header h2{
+    font-size:42px;
+    color:white;
+    margin-top:20px;
+}
+
+.auth-header p{
+    color:rgba(255,255,255,.7);
+}
+
+.logo-circle{
+    width:90px;
+    height:90px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:40px;
+
+    background:
+      linear-gradient(
+        135deg,
+        #ff4d4f,
+        #ff7875
+      );
+}
+
+.auth-showcase h1{
+    font-size:96px;
+    font-weight:900;
+    line-height:.95;
+    color:white;
+}
+
+.auth-showcase p{
+    color:rgba(255,255,255,.8);
+    font-size:22px;
+    line-height:1.8;
+    max-width:700px;
+}
