@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ambulance.SmartAmbulanceTracking.ApiResponce.ApiResponse;
 import com.ambulance.SmartAmbulanceTracking.Entity.EmergencyRequest;
-import com.ambulance.SmartAmbulanceTracking.Service.EmergencyService;
+import com.ambulance.SmartAmbulanceTracking.service.EmergencyService;
 
 @RestController
 @RequestMapping("/api/emergency")

@@ -1,5 +1,9 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +20,10 @@ public class Patient {
 	private String emergencyLevel;
 
 	private String vitals;
+
+	@OneToMany(mappedBy = "patient")
+	@JsonIgnore
+	private List<Booking> bookings;
 
 	// Getters & Setters
 

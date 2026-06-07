@@ -1,85 +1,92 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "driver")
 public class Driver {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String name;
+	private String name;
 
-    private String phoneNumber;
+	private String phoneNumber;
 
-    private String email;
+	private String email;
 
-    private String licenseNumber;
+	private String licenseNumber;
 
-    private boolean available;
+	private boolean available;
 
-    @OneToOne
-    @JoinColumn(name = "ambulance_id")
-    private Ambulance ambulance;
+	@OneToOne(mappedBy = "driver")
+	private Ambulance ambulance;
 
-    public Driver() {
-    }
+	@OneToMany(mappedBy = "driver")
+	@JsonIgnore
+	private List<Booking> bookings;
 
-    public Long getId() {
-        return id;
-    }
+	public Driver() {
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getLicenseNumber() {
-        return licenseNumber;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
-    }
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
 
-    public boolean isAvailable() {
-        return available;
-    }
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
+	public boolean isAvailable() {
+		return available;
+	}
 
-    public Ambulance getAmbulance() {
-        return ambulance;
-    }
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
 
-    public void setAmbulance(Ambulance ambulance) {
-        this.ambulance = ambulance;
-    }
+	public Ambulance getAmbulance() {
+		return ambulance;
+	}
+
+	public void setAmbulance(Ambulance ambulance) {
+		this.ambulance = ambulance;
+	}
 }

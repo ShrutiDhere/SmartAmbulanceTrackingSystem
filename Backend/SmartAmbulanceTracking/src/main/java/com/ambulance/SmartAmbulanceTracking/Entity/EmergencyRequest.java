@@ -8,109 +8,112 @@ import jakarta.persistence.*;
 @Table(name = "emergency_request")
 public class EmergencyRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private double pickupLat;
+	private double pickupLat;
 
-    private double pickupLng;
+	private double pickupLng;
 
-    @Enumerated(EnumType.STRING)
-    private EmergencyStatus status;
+	@Enumerated(EnumType.STRING)
+	private EmergencyStatus status;
 
-    private LocalDateTime createdAt;
+	private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name = "ambulance_id")
-    private Ambulance ambulance;
+	@ManyToOne
+	@JoinColumn(name = "ambulance_id")
+	private Ambulance ambulance;
 
-    @ManyToOne
-    @JoinColumn(name = "hospital_id")
-    private Hospital hospital;
+	@ManyToOne
+	@JoinColumn(name = "hospital_id")
+	private Hospital hospital;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    @OneToOne(mappedBy = "booking")
-    private Payment payment;
+	@OneToOne(mappedBy = "emergencyRequest")
+	private Booking booking;
 
-    // Default Constructor
-    public EmergencyRequest() {
-    }
+	@OneToOne(mappedBy = "booking")
+	private Payment payment;
 
-    // Getters & Setters
+	// Default Constructor
+	public EmergencyRequest() {
+	}
 
-    public Long getId() {
-        return id;
-    }
+	// Getters & Setters
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public double getPickupLat() {
-        return pickupLat;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setPickupLat(double pickupLat) {
-        this.pickupLat = pickupLat;
-    }
+	public double getPickupLat() {
+		return pickupLat;
+	}
 
-    public double getPickupLng() {
-        return pickupLng;
-    }
+	public void setPickupLat(double pickupLat) {
+		this.pickupLat = pickupLat;
+	}
 
-    public void setPickupLng(double pickupLng) {
-        this.pickupLng = pickupLng;
-    }
+	public double getPickupLng() {
+		return pickupLng;
+	}
 
-    public EmergencyStatus getStatus() {
-        return status;
-    }
+	public void setPickupLng(double pickupLng) {
+		this.pickupLng = pickupLng;
+	}
 
-    public void setStatus(EmergencyStatus status) {
-        this.status = status;
-    }
+	public EmergencyStatus getStatus() {
+		return status;
+	}
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+	public void setStatus(EmergencyStatus status) {
+		this.status = status;
+	}
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
 
-    public Ambulance getAmbulance() {
-        return ambulance;
-    }
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
 
-    public void setAmbulance(Ambulance ambulance) {
-        this.ambulance = ambulance;
-    }
+	public Ambulance getAmbulance() {
+		return ambulance;
+	}
 
-    public Hospital getHospital() {
-        return hospital;
-    }
+	public void setAmbulance(Ambulance ambulance) {
+		this.ambulance = ambulance;
+	}
 
-    public void setHospital(Hospital hospital) {
-        this.hospital = hospital;
-    }
+	public Hospital getHospital() {
+		return hospital;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public void setHospital(Hospital hospital) {
+		this.hospital = hospital;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public Payment getPayment() {
-        return payment;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    public void setPayment(Payment payment) {
-        this.payment = payment;
-    }
+	public Payment getPayment() {
+		return payment;
+	}
+
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
 }

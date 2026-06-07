@@ -1,4 +1,4 @@
-package com.ambulance.SmartAmbulanceTracking.Service;
+package com.ambulance.SmartAmbulanceTracking.service;
 
 import com.ambulance.SmartAmbulanceTracking.Entity.Payment;
 import java.util.List;
