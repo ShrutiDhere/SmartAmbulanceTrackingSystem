@@ -1,87 +1,116 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
 @Entity
+@Table(name = "emergency_request")
 public class EmergencyRequest {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private double pickupLat;
-	private double pickupLng;
+    private double pickupLat;
 
-	private String status;
+    private double pickupLng;
 
-	private LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private EmergencyStatus status;
 
-	@ManyToOne
-	private Ambulance ambulance;
+    private LocalDateTime createdAt;
 
-	@ManyToOne
-	private Hospital hospital;
-	@ManyToOne
-	private User user;
-	@OneToOne(mappedBy = "booking")
-	private Payment payment;
+    @ManyToOne
+    @JoinColumn(name = "ambulance_id")
+    private Ambulance ambulance;
 
-	// Getters & Setters
+    @ManyToOne
+    @JoinColumn(name = "hospital_id")
+    private Hospital hospital;
 
-	public Long getId() {
-		return id;
-	}
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @OneToOne(mappedBy = "booking")
+    private Payment payment;
 
-	public double getPickupLat() {
-		return pickupLat;
-	}
+    // Default Constructor
+    public EmergencyRequest() {
+    }
 
-	public void setPickupLat(double pickupLat) {
-		this.pickupLat = pickupLat;
-	}
+    // Getters & Setters
 
-	public double getPickupLng() {
-		return pickupLng;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setPickupLng(double pickupLng) {
-		this.pickupLng = pickupLng;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getStatus() {
-		return status;
-	}
+    public double getPickupLat() {
+        return pickupLat;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public void setPickupLat(double pickupLat) {
+        this.pickupLat = pickupLat;
+    }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public double getPickupLng() {
+        return pickupLng;
+    }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setPickupLng(double pickupLng) {
+        this.pickupLng = pickupLng;
+    }
 
-	public Ambulance getAmbulance() {
-		return ambulance;
-	}
+    public EmergencyStatus getStatus() {
+        return status;
+    }
 
-	public void setAmbulance(Ambulance ambulance) {
-		this.ambulance = ambulance;
-	}
+    public void setStatus(EmergencyStatus status) {
+        this.status = status;
+    }
 
-	public Hospital getHospital() {
-		return hospital;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setHospital(Hospital hospital) {
-		this.hospital = hospital;
-	}
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Ambulance getAmbulance() {
+        return ambulance;
+    }
+
+    public void setAmbulance(Ambulance ambulance) {
+        this.ambulance = ambulance;
+    }
+
+    public Hospital getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
 }

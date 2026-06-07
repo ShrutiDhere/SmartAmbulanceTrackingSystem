@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.ambulance.SmartAmbulanceTracking.Entity.Payment;
 import com.ambulance.SmartAmbulanceTracking.exception.ResourceNotFoundException;
 import com.ambulance.SmartAmbulanceTracking.repository.PaymentRepository;
- 
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,7 +28,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment getById(Long id) {
         return repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Payment not found"));
     }
 
     @Override

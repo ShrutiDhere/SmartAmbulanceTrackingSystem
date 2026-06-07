@@ -14,30 +14,33 @@ import java.util.List;
 @CrossOrigin
 public class UserController {
 
-    @Autowired
+    @Autowired	
     private UserService service;
 
-    // 🔹 Get all users
     @GetMapping("/all")
     public ApiResponse<List<User>> getAll() {
         return new ApiResponse<>(true, "Users fetched", service.getAll());
     }
 
-    // 🔹 Save/Register user
     @PostMapping("/register")
     public ApiResponse<User> register(@RequestBody User user) {
         return new ApiResponse<>(true, "User registered successfully",
                 service.save(user));
     }
 
-    // 🔹 Get user by ID (optional but important)
+    // 🔥 LOGIN FIXED (NO 500 ERROR NOW)
+    @PostMapping("/login")
+    public ApiResponse<User> login(@RequestBody User user) {
+        return new ApiResponse<>(true, "Login successful",
+                service.login(user.getEmail(), user.getPassword()));
+    }
+
     @GetMapping("/{id}")
     public ApiResponse<User> getById(@PathVariable Long id) {
         return new ApiResponse<>(true, "User found",
                 service.getById(id));
     }
 
-    // 🔹 Delete user
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         service.delete(id);

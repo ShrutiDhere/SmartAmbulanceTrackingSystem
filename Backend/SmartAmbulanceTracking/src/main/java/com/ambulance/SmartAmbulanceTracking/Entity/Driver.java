@@ -3,59 +3,83 @@ package com.ambulance.SmartAmbulanceTracking.Entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "driver")
 public class Driver {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String name;
-	private String licenseNumber;
-	private boolean available;
+    private String name;
 
-	@OneToOne
-	@JoinColumn(name = "ambulance_id")
-	private Ambulance ambulance;
+    private String phoneNumber;
 
-	// Getters & Setters
+    private String email;
 
-	public Long getId() {
-		return id;
-	}
+    private String licenseNumber;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private boolean available;
 
-	public String getName() {
-		return name;
-	}
+    @OneToOne
+    @JoinColumn(name = "ambulance_id")
+    private Ambulance ambulance;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Driver() {
+    }
 
-	public String getLicenseNumber() {
-		return licenseNumber;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setLicenseNumber(String licenseNumber) {
-		this.licenseNumber = licenseNumber;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public boolean isAvailable() {
-		return available;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Ambulance getAmbulance() {
-		return ambulance;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public void setAmbulance(Ambulance ambulance) {
-		this.ambulance = ambulance;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public Ambulance getAmbulance() {
+        return ambulance;
+    }
+
+    public void setAmbulance(Ambulance ambulance) {
+        this.ambulance = ambulance;
+    }
 }

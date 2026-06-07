@@ -1,14 +1,11 @@
 package com.ambulance.SmartAmbulanceTracking.Service;
 
- 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ambulance.SmartAmbulanceTracking.Entity.*;
 import com.ambulance.SmartAmbulanceTracking.exception.ResourceNotFoundException;
 import com.ambulance.SmartAmbulanceTracking.repository.*;
- 
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,18 +28,20 @@ public class BookingServiceImpl implements BookingService {
         Ambulance ambulance = ambulanceRepo.findByStatus(AmbulanceStatus.AVAILABLE)
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("No ambulance available"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No ambulance available"));
 
         Hospital hospital = hospitalRepo.findByEmergencyAvailableTrue()
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("No hospital available"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No hospital available"));
 
         ambulance.setStatus(AmbulanceStatus.BUSY);
 
         request.setAmbulance(ambulance);
         request.setHospital(hospital);
-        request.setStatus("ASSIGNED");
+        request.setStatus(EmergencyStatus.PENDING);
         request.setCreatedAt(LocalDateTime.now());
 
         ambulanceRepo.save(ambulance);
@@ -53,7 +52,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public EmergencyRequest getById(Long id) {
         return requestRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Booking not found"));
     }
 
     @Override
@@ -66,10 +66,10 @@ public class BookingServiceImpl implements BookingService {
 
         EmergencyRequest req = getById(id);
 
-        req.setStatus("CANCELLED");
+        req.setStatus(EmergencyStatus.CANCELLED);
 
-        // Free ambulance
         Ambulance amb = req.getAmbulance();
+
         if (amb != null) {
             amb.setStatus(AmbulanceStatus.AVAILABLE);
             ambulanceRepo.save(amb);
@@ -82,11 +82,17 @@ public class BookingServiceImpl implements BookingService {
     public EmergencyRequest updateStatus(Long id, String status) {
 
         EmergencyRequest req = getById(id);
-        req.setStatus(status);
 
-        // If completed → free ambulance
-        if ("COMPLETED".equalsIgnoreCase(status)) {
+        EmergencyStatus newStatus =
+                EmergencyStatus.valueOf(status.toUpperCase());
+
+        req.setStatus(newStatus);
+
+        if (newStatus == EmergencyStatus.COMPLETED
+                || newStatus == EmergencyStatus.CANCELLED) {
+
             Ambulance amb = req.getAmbulance();
+
             if (amb != null) {
                 amb.setStatus(AmbulanceStatus.AVAILABLE);
                 ambulanceRepo.save(amb);

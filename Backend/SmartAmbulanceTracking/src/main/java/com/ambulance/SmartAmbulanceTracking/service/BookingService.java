@@ -1,18 +1,17 @@
 package com.ambulance.SmartAmbulanceTracking.Service;
 
 import com.ambulance.SmartAmbulanceTracking.Entity.EmergencyRequest;
-
 import java.util.List;
 
 public interface BookingService {
 
-	EmergencyRequest createBooking(EmergencyRequest request);
+    EmergencyRequest createBooking(EmergencyRequest request);
 
-	EmergencyRequest getById(Long id);
+    EmergencyRequest getById(Long id);
 
-	List<EmergencyRequest> getAll();
+    List<EmergencyRequest> getAll();
 
-	EmergencyRequest cancelBooking(Long id);
+    EmergencyRequest cancelBooking(Long id);
 
-	EmergencyRequest updateStatus(Long id, String status);
+    EmergencyRequest updateStatus(Long id, String status);
 }
