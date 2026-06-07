@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ambulance.SmartAmbulanceTracking.Entity.User;
-import com.ambulance.SmartAmbulanceTracking.Service.UserService;
 import com.ambulance.SmartAmbulanceTracking.security.JwtUtil;
+import com.ambulance.SmartAmbulanceTracking.service.UserService;
 
 import jakarta.validation.Valid;
 

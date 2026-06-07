@@ -7,77 +7,78 @@ import java.time.LocalDateTime;
 @Table(name = "payment")
 public class Payment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private double amount;
+	private double amount;
 
-    private String status;
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus status;
 
-    private String paymentMethod;
+	private String paymentMethod;
 
-    private String transactionId;
+	private String transactionId;
 
-    private LocalDateTime paymentTime;
+	private LocalDateTime paymentTime;
 
-    @OneToOne
-    @JoinColumn(name = "booking_id")
-    private EmergencyRequest booking;
+	@OneToOne
+	@JoinColumn(name = "booking_id")
+	private Booking booking;
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public double getAmount() {
-        return amount;
-    }
+	public double getAmount() {
+		return amount;
+	}
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
 
-    public String getStatus() {
-        return status;
-    }
+	public PaymentStatus getStatus() {
+		return status;
+	}
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+	public void setStatus(PaymentStatus status) {
+		this.status = status;
+	}
 
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
 
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
 
-    public String getTransactionId() {
-        return transactionId;
-    }
+	public String getTransactionId() {
+		return transactionId;
+	}
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
 
-    public LocalDateTime getPaymentTime() {
-        return paymentTime;
-    }
+	public LocalDateTime getPaymentTime() {
+		return paymentTime;
+	}
 
-    public void setPaymentTime(LocalDateTime paymentTime) {
-        this.paymentTime = paymentTime;
-    }
+	public void setPaymentTime(LocalDateTime paymentTime) {
+		this.paymentTime = paymentTime;
+	}
 
-    public EmergencyRequest getBooking() {
-        return booking;
-    }
+	public Booking getBooking() {
+		return booking;
+	}
 
-    public void setBooking(EmergencyRequest booking) {
-        this.booking = booking;
-    }
+	public void setBooking(Booking booking) {
+		this.booking = booking;
+	}
 }

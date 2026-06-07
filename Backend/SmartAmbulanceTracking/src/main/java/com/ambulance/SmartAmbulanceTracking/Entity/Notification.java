@@ -12,7 +12,8 @@ public class Notification {
 
 	private String message;
 
-	private String type; // DRIVER / PATIENT / HOSPITAL / ADMIN
+	@Enumerated(EnumType.STRING)
+	private NotificationType type;
 
 	private boolean readStatus;
 
@@ -40,11 +41,11 @@ public class Notification {
 		this.message = message;
 	}
 
-	public String getType() {
+	public NotificationType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(NotificationType type) {
 		this.type = type;
 	}
 

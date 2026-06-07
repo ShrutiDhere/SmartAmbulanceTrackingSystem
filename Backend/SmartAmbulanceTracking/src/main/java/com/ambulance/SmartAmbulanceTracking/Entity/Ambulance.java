@@ -2,106 +2,113 @@ package com.ambulance.SmartAmbulanceTracking.Entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "ambulance")
 public class Ambulance {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String vehicleNumber;
+	private String vehicleNumber;
 
-    @Enumerated(EnumType.STRING)
-    private AmbulanceStatus status;
+	@Enumerated(EnumType.STRING)
+	private AmbulanceStatus status;
 
-    private double latitude;
+	private double latitude;
 
-    private double longitude;
+	private double longitude;
 
-    private double speed;
+	private double speed;
 
-    private String currentLocation;
+	private String currentLocation;
 
-    private LocalDateTime lastUpdated;
+	private LocalDateTime lastUpdated;
 
-    @ManyToOne
-    @JoinColumn(name = "driver_id")
-    private Driver driver;
+	@OneToOne
+	@JoinColumn(name = "driver_id")
+	private Driver driver;
 
-    public Ambulance() {
-    }
+	@OneToMany(mappedBy = "ambulance")
+	@JsonIgnore
+	private List<Booking> bookings;
 
-    public Long getId() {
-        return id;
-    }
+	public Ambulance() {
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getVehicleNumber() {
-        return vehicleNumber;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setVehicleNumber(String vehicleNumber) {
-        this.vehicleNumber = vehicleNumber;
-    }
+	public String getVehicleNumber() {
+		return vehicleNumber;
+	}
 
-    public AmbulanceStatus getStatus() {
-        return status;
-    }
+	public void setVehicleNumber(String vehicleNumber) {
+		this.vehicleNumber = vehicleNumber;
+	}
 
-    public void setStatus(AmbulanceStatus status) {
-        this.status = status;
-    }
+	public AmbulanceStatus getStatus() {
+		return status;
+	}
 
-    public double getLatitude() {
-        return latitude;
-    }
+	public void setStatus(AmbulanceStatus status) {
+		this.status = status;
+	}
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
+	public double getLatitude() {
+		return latitude;
+	}
 
-    public double getLongitude() {
-        return longitude;
-    }
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
+	public double getLongitude() {
+		return longitude;
+	}
 
-    public double getSpeed() {
-        return speed;
-    }
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
+	public double getSpeed() {
+		return speed;
+	}
 
-    public String getCurrentLocation() {
-        return currentLocation;
-    }
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
 
-    public void setCurrentLocation(String currentLocation) {
-        this.currentLocation = currentLocation;
-    }
+	public String getCurrentLocation() {
+		return currentLocation;
+	}
 
-    public LocalDateTime getLastUpdated() {
-        return lastUpdated;
-    }
+	public void setCurrentLocation(String currentLocation) {
+		this.currentLocation = currentLocation;
+	}
 
-    public void setLastUpdated(LocalDateTime lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
+	public LocalDateTime getLastUpdated() {
+		return lastUpdated;
+	}
 
-    public Driver getDriver() {
-        return driver;
-    }
+	public void setLastUpdated(LocalDateTime lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
 
-    public void setDriver(Driver driver) {
-        this.driver = driver;
-    }
+	public Driver getDriver() {
+		return driver;
+	}
+
+	public void setDriver(Driver driver) {
+		this.driver = driver;
+	}
 }

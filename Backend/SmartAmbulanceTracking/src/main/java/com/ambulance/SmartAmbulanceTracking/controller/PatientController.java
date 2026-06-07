@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ambulance.SmartAmbulanceTracking.ApiResponce.ApiResponse;
 import com.ambulance.SmartAmbulanceTracking.Entity.Patient;
-import com.ambulance.SmartAmbulanceTracking.Service.PatientService;
+import com.ambulance.SmartAmbulanceTracking.service.PatientService;
 
 import java.util.List;
 

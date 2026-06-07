@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.ambulance.SmartAmbulanceTracking.ApiResponce.ApiResponse;
-import com.ambulance.SmartAmbulanceTracking.Service.TrackingService;
+import com.ambulance.SmartAmbulanceTracking.service.TrackingService;
 
 @RestController
 @RequestMapping("/api/tracking")

@@ -52,14 +52,14 @@
 //    }
 //}
 
-package com.ambulance.SmartAmbulanceTracking.Service;
+package com.ambulance.SmartAmbulanceTracking.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ambulance.SmartAmbulanceTracking.Entity.*;
 import com.ambulance.SmartAmbulanceTracking.repository.AmbulanceRepository;
-import com.ambulance.SmartAmbulanceTracking.Service.AmbulanceServiceImpl;
+import com.ambulance.SmartAmbulanceTracking.service.AmbulanceServiceImpl;
 import com.ambulance.SmartAmbulanceTracking.exception.ResourceNotFoundException;
 
 import java.util.Comparator;
