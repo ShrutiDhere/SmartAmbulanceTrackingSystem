@@ -1,20 +1,34 @@
-import { useEffect, useState } from "react";
+    import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
 import Loader from "../components/Loader";
 import { showToast } from "../utils/toast";
-import { validateEmail, validatePassword, isFormValid } from "../utils/validation";
+import {
+  validateEmail,
+  validatePassword,
+  isFormValid,
+} from "../utils/validation";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, loading, error, clearError, isAuthenticated } = useAuth();
+
+  const {
+    login,
+    loading,
+    error,
+    clearError,
+    isAuthenticated,
+  } = useAuth();
 
   const [rememberMe, setRememberMe] = useState(false);
 
   const [formData, setFormData] = useState({
-    email: localStorage.getItem("ambulance_remember_email") || "",
+    email:
+      localStorage.getItem(
+        "ambulance_remember_email"
+      ) || "",
     password: "",
   });
 
@@ -48,10 +62,14 @@ export default function Login() {
   const validateForm = () => {
     const newErrors = {
       email: validateEmail(formData.email),
-      password: validatePassword(formData.password, 6),
+      password: validatePassword(
+        formData.password,
+        6
+      ),
     };
 
     setErrors(newErrors);
+
     return isFormValid(newErrors);
   };
 
@@ -74,7 +92,9 @@ export default function Login() {
       }
 
       showToast(
-        `Welcome back ${user?.name || ""}`,
+        `Welcome Back ${
+          user?.name || ""
+        }`,
         "success"
       );
 
@@ -89,23 +109,29 @@ export default function Login() {
 
       <div className="auth-container">
 
+        {/* LEFT HERO SECTION */}
+
         <div className="auth-showcase">
 
           <div className="showcase-badge">
-            🚑 Smart Ambulance Network
+            🚑 AI Based Smart Ambulance Tracking System
           </div>
 
-          <h1>
-AI Based Smart Ambulance
+         <h1>
+AI Based
+Smart Ambulance
 Tracking System
 </h1>
 
-         <p>
-Advanced AI-powered ambulance dispatch platform with
-real-time GPS tracking, nearest ambulance allocation,
-ETA prediction, emergency response optimization,
-and hospital connectivity.
-</p>
+          <p>
+            Real-time ambulance booking,
+            intelligent dispatching,
+            GPS tracking, ETA prediction,
+            hospital integration and
+            emergency response management
+            in one smart healthcare platform.
+          </p>
+
           <div className="showcase-stats">
 
             <div className="stat-box">
@@ -120,29 +146,67 @@ and hospital connectivity.
 
             <div className="stat-box">
               <h3>24/7</h3>
-              <span>Emergency</span>
+              <span>Emergency Care</span>
+            </div>
+
+          </div>
+
+          {/* Dashboard Preview */}
+
+          <div className="dashboard-preview">
+
+            <div className="preview-card">
+              🚑
+              <h2>248</h2>
+              <span>
+                Active Ambulances
+              </span>
+            </div>
+
+            <div className="preview-card">
+              📍
+              <h2>100%</h2>
+              <span>
+                Live Tracking
+              </span>
+            </div>
+
+            <div className="preview-card">
+              ⚡
+              <h2>4.2</h2>
+              <span>
+                Avg Response (Min)
+              </span>
             </div>
 
           </div>
 
         </div>
 
+        {/* RIGHT LOGIN PANEL */}
+
         <div className="auth-panel auth-panel-fluid">
 
           <div className="auth-header">
+
             <div className="logo-circle">
               🚑
             </div>
 
-            <h2>Welcome Back</h2>
+            <h2>
+              Welcome Back
+            </h2>
 
             <p>
-              Login to continue ambulance tracking
+              Sign in to access
+              live ambulance tracking
+              and emergency services.
             </p>
+
           </div>
 
           {apiError && (
-            <div className="auth-alert auth-alert-error">
+            <div className="auth-alert">
               {apiError}
             </div>
           )}
@@ -151,10 +215,11 @@ and hospital connectivity.
             className="auth-form"
             onSubmit={handleSubmit}
           >
+
             <InputField
               label="Email Address"
               type="email"
-              placeholder="john@example.com"
+              placeholder="Enter your email"
               value={formData.email}
               onChange={(e) =>
                 handleInputChange(
@@ -168,7 +233,7 @@ and hospital connectivity.
             <InputField
               label="Password"
               type="password"
-              placeholder="Enter Password"
+              placeholder="Enter password"
               value={formData.password}
               onChange={(e) =>
                 handleInputChange(
@@ -183,6 +248,7 @@ and hospital connectivity.
             <div className="form-footer">
 
               <label className="checkbox-label">
+
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -192,7 +258,10 @@ and hospital connectivity.
                     )
                   }
                 />
-                Remember me
+
+                {" "}
+                Remember Me
+
               </label>
 
               <Link
@@ -220,7 +289,7 @@ and hospital connectivity.
 
           <Link
             to="/register"
-            className="btn btn-secondary btn-block btn-large"
+            className="btn btn-secondary"
           >
             Create New Account
           </Link>
@@ -230,7 +299,9 @@ and hospital connectivity.
       </div>
 
       {loading && (
-        <Loader message="Signing In..." />
+        <Loader
+          message="Signing In..."
+        />
       )}
 
     </div>

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import InputField from "../components/InputField";
 import Button from "../components/Button";
+import Loader from "../components/Loader";
 import { showToast } from "../utils/toast";
+
 import {
   validateName,
   validateEmail,
@@ -15,7 +17,14 @@ import {
 
 export default function Register() {
   const navigate = useNavigate();
-  const { register, loading, error, clearError, isAuthenticated } = useAuth();
+
+  const {
+    register,
+    loading,
+    error,
+    clearError,
+    isAuthenticated,
+  } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -50,10 +59,18 @@ export default function Register() {
   }, [error, clearError]);
 
   const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({
+        ...prev,
+        [field]: "",
+      }));
     }
+
     if (apiError) {
       setApiError("");
     }
@@ -63,16 +80,28 @@ export default function Register() {
     const newErrors = {
       name: validateName(formData.name),
       email: validateEmail(formData.email),
-      password: validatePassword(formData.password, 6),
-      confirmPassword: validateConfirmPassword(formData.password, formData.confirmPassword),
-      address: validateAddress(formData.address),
+      password: validatePassword(
+        formData.password,
+        6
+      ),
+      confirmPassword:
+        validateConfirmPassword(
+          formData.password,
+          formData.confirmPassword
+        ),
+      address: validateAddress(
+        formData.address
+      ),
     };
+
     setErrors(newErrors);
+
     return isFormValid(newErrors);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     try {
@@ -83,174 +112,263 @@ export default function Register() {
         address: formData.address.trim(),
         role: formData.role,
       });
-      showToast(`Welcome, ${user?.name || formData.email}!`, "success");
-      if (user?.role === "DRIVER") {
-        navigate("/driver");
-      } else if (user?.role === "ADMIN") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
-    } catch (registerError) {
-      setApiError(registerError.message || "Registration failed. Please try again.");
+
+      showToast(
+        `Welcome ${user?.name || ""}`,
+        "success"
+      );
+
+      navigate("/");
+    } catch (err) {
+      setApiError(
+        err.message ||
+          "Registration failed"
+      );
     }
   };
 
   return (
-    <div className="auth-page auth-register">
+    <div className="auth-page">
+
       <div className="auth-container">
 
-  <div className="auth-hero">
-    <div className="hero-badge">
-      SMART AMBULANCE TRACKING
-    </div>
+        {/* LEFT HERO */}
 
-    <h1>
-      Join The Future
-      <br />
-      Of Emergency Response
-    </h1>
+        <div className="auth-showcase">
 
-    <p>
-      Register and access real-time ambulance booking,
-      live ambulance tracking, hospital integration,
-      emergency dispatch and smart healthcare services.
-    </p>
-
-    <div className="hero-stats">
-      <div className="hero-stat">
-        <h2>10K+</h2>
-        <span>Users</span>
-      </div>
-
-      <div className="hero-stat">
-        <h2>500+</h2>
-        <span>Drivers</span>
-      </div>
-
-      <div className="hero-stat">
-        <h2>99%</h2>
-        <span>Success Rate</span>
-      </div>
-    </div>
-  </div>
-
-  <div className="auth-panel auth-panel-fluid">
-          <div className="auth-header">
-            <div className="auth-logo">
-              <div className="logo-circle">🚑</div>
-            </div>
-            <h1>Register for dispatch</h1>
-            <p>Create your account and book emergency transport in seconds.</p>
+          <div className="showcase-badge">
+            🚑 AI Based Smart Ambulance Tracking System
           </div>
 
-          {apiError && <div className="auth-alert auth-alert-error">{apiError}</div>}
+          <h1>
+AI Based
+Smart Ambulance
+Tracking System
+</h1>
 
-          <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          <p>
+            Register today and gain
+            access to real-time ambulance
+            booking, GPS tracking,
+            AI-powered dispatching,
+            hospital connectivity and
+            emergency healthcare services.
+          </p>
+
+          <div className="showcase-stats">
+
+            <div className="stat-box">
+              <h3>10K+</h3>
+              <span>Users</span>
+            </div>
+
+            <div className="stat-box">
+              <h3>500+</h3>
+              <span>Drivers</span>
+            </div>
+
+            <div className="stat-box">
+              <h3>99%</h3>
+              <span>Success Rate</span>
+            </div>
+
+          </div>
+
+          <div className="dashboard-preview">
+
+            <div className="preview-card">
+              🏥
+              <h2>50+</h2>
+              <span>
+                Connected Hospitals
+              </span>
+            </div>
+
+            <div className="preview-card">
+              🚑
+              <h2>250+</h2>
+              <span>
+                Ambulances
+              </span>
+            </div>
+
+            <div className="preview-card">
+              ⚡
+              <h2>24/7</h2>
+              <span>
+                Emergency Support
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* REGISTER PANEL */}
+
+        <div className="auth-panel auth-panel-fluid">
+
+          <div className="auth-header">
+
+            <div className="logo-circle">
+              🚑
+            </div>
+
+            <h2>
+              Create Account
+            </h2>
+
+            <p>
+              Register and start using
+              Smart Ambulance Services
+            </p>
+
+          </div>
+
+          {apiError && (
+            <div className="auth-alert">
+              {apiError}
+            </div>
+          )}
+
+          <form
+            className="auth-form"
+            onSubmit={handleSubmit}
+          >
+
             <InputField
-              label="Full name"
-              type="text"
-              placeholder="Enter your full name"
+              label="Full Name"
+              placeholder="Enter Full Name"
               value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+              onChange={(e) =>
+                handleInputChange(
+                  "name",
+                  e.target.value
+                )
+              }
               error={errors.name}
-              autoComplete="name"
-              icon={
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
-                  <path d="M12 12c2.7 0 5-2.2 5-5s-2.3-5-5-5-5 2.2-5 5 2.3 5 5 5z" />
-                  <path d="M4 21v-1c0-2.7 2.3-5 8-5s8 2.3 8 5v1" />
-                </svg>
-              }
             />
+
             <InputField
-              label="Email address"
+              label="Email Address"
               type="email"
-              placeholder="your.email@example.com"
+              placeholder="Enter Email"
               value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-              error={errors.email}
-              autoComplete="email"
-              icon={
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
-                  <path d="M4 4h16v16H4z" opacity="0.12" />
-                  <path d="M4 6l8 6 8-6" />
-                  <path d="M4 18V8l8 6 8-6v10" />
-                </svg>
+              onChange={(e) =>
+                handleInputChange(
+                  "email",
+                  e.target.value
+                )
               }
+              error={errors.email}
             />
+
             <InputField
               label="Address"
-              type="text"
-              placeholder="Street address, city, state"
+              placeholder="Enter Address"
               value={formData.address}
-              onChange={(e) => handleInputChange("address", e.target.value)}
-              error={errors.address}
-              autoComplete="street-address"
-              icon={
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
-                  <path d="M12 21s8-4.5 8-10a8 8 0 1 0-16 0c0 5.5 8 10 8 10z" />
-                  <circle cx="12" cy="11" r="3" />
-                </svg>
+              onChange={(e) =>
+                handleInputChange(
+                  "address",
+                  e.target.value
+                )
               }
+              error={errors.address}
             />
+
             <InputField
               label="Password"
               type="password"
-              placeholder="Create a strong password"
+              placeholder="Create Password"
               value={formData.password}
-              onChange={(e) => handleInputChange("password", e.target.value)}
+              onChange={(e) =>
+                handleInputChange(
+                  "password",
+                  e.target.value
+                )
+              }
               error={errors.password}
               showPasswordToggle
-              autoComplete="new-password"
-              icon={
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
-                  <rect x="5" y="11" width="14" height="8" rx="2" />
-                  <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-                </svg>
-              }
             />
+
             <InputField
-              label="Confirm password"
+              label="Confirm Password"
               type="password"
-              placeholder="Repeat your password"
+              placeholder="Confirm Password"
               value={formData.confirmPassword}
-              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+              onChange={(e) =>
+                handleInputChange(
+                  "confirmPassword",
+                  e.target.value
+                )
+              }
               error={errors.confirmPassword}
               showPasswordToggle
-              autoComplete="new-password"
-              icon={
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor">
-                  <path d="M5 12h14" />
-                  <path d="M10 6l6 6-6 6" />
-                </svg>
-              }
             />
+
             <div className="form-group">
-              <label className="form-label">Account type</label>
-              <select className="form-control" value={formData.role} onChange={(e) => handleInputChange("role", e.target.value)}>
-                <option value="USER">Regular user</option>
-                <option value="DRIVER">Ambulance driver</option>
-                <option value="ADMIN">Administrator</option>
+
+              <label className="form-label">
+                Account Type
+              </label>
+
+              <select
+                className="form-control"
+                value={formData.role}
+                onChange={(e) =>
+                  handleInputChange(
+                    "role",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="USER">
+                  User
+                </option>
+
+                <option value="DRIVER">
+                  Ambulance Driver
+                </option>
+
+                <option value="ADMIN">
+                  Administrator
+                </option>
+
               </select>
+
             </div>
-            <Button type="submit" variant="danger" loading={loading} disabled={loading}>
-              {loading ? "Creating account..." : "Create account"}
+
+            <Button
+              type="submit"
+              variant="danger"
+              loading={loading}
+            >
+              Create Account
             </Button>
+
           </form>
 
           <div className="auth-divider">
-            <span>Already have an account?</span>
+            Already have an account?
           </div>
 
-          <Link to="/login" className="btn btn-secondary btn-block btn-large">
-            Sign in
+          <Link
+            to="/login"
+            className="btn btn-secondary"
+          >
+            Sign In
           </Link>
 
-          <div className="auth-footer">
-            <p>By creating an account, you agree to our Terms of Service and Privacy Policy.</p>
-          </div>
         </div>
+
       </div>
+
+      {loading && (
+        <Loader
+          message="Creating Account..."
+        />
+      )}
+
     </div>
   );
 }
