@@ -1,6 +1,8 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "hospital")
@@ -9,13 +11,15 @@ public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotBlank
     private String name;
 
     private String address;
 
     private String contactNumber;
 
+    @Column(unique = true)
+    @Email
     private String email;
 
     private int icuBeds;

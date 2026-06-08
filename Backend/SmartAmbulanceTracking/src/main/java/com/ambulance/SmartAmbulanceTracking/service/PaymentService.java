@@ -1,13 +1,11 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.Payment;
+import com.ambulance.SmartAmbulanceTracking.DTO.PaymentRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.PaymentResponseDTO;
 import java.util.List;
 
 public interface PaymentService {
-
-	Payment processPayment(Payment payment);
-
-	Payment getById(Long id);
-
-	List<Payment> getAll();
+    PaymentResponseDTO processPayment(PaymentRequestDTO requestDTO);
+    PaymentResponseDTO getPaymentById(Long id);
+    List<PaymentResponseDTO> getAllPayments();
 }

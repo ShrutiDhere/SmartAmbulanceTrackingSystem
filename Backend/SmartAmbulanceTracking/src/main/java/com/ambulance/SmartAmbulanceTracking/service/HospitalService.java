@@ -1,11 +1,17 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
+import com.ambulance.SmartAmbulanceTracking.DTO.HospitalRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.HospitalResponseDTO;
 import java.util.List;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.Hospital;
-
 public interface HospitalService {
-	List<Hospital> getAll();
+	HospitalResponseDTO registerHospital(HospitalRequestDTO requestDTO);
 
-	List<Hospital> getAvailable();
+	HospitalResponseDTO getHospitalById(Long id);
+
+	List<HospitalResponseDTO> getAllHospitals();
+
+	HospitalResponseDTO updateBedCount(Long id, int icuBeds, int generalBeds);
+
+	HospitalResponseDTO updateEmergencyAvailability(Long id, boolean isAvailable);
 }

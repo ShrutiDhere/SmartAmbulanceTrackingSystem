@@ -17,7 +17,7 @@ public class Notification {
 
 	private boolean readStatus;
 
-	private LocalDateTime timestamp;
+	private LocalDateTime createdAt;
 
 	// Optional relation to user
 	@ManyToOne
@@ -58,11 +58,11 @@ public class Notification {
 	}
 
 	public LocalDateTime getTimestamp() {
-		return timestamp;
+		return  createdAt;
 	}
 
-	public void setTimestamp(LocalDateTime timestamp) {
-		this.timestamp = timestamp;
+	public void setTimestamp(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public User getUser() {

@@ -36,9 +36,6 @@ public class EmergencyRequest {
 	@OneToOne(mappedBy = "emergencyRequest")
 	private Booking booking;
 
-	@OneToOne(mappedBy = "booking")
-	private Payment payment;
-
 	// Default Constructor
 	public EmergencyRequest() {
 	}
@@ -109,11 +106,5 @@ public class EmergencyRequest {
 		this.user = user;
 	}
 
-	public Payment getPayment() {
-		return payment;
-	}
-
-	public void setPayment(Payment payment) {
-		this.payment = payment;
-	}
+ 
 }

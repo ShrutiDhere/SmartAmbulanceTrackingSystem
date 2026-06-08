@@ -1,11 +1,12 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
+import com.ambulance.SmartAmbulanceTracking.DTO.DriverRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.DriverResponseDTO;
 import java.util.List;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.Driver;
-
 public interface DriverService {
-	List<Driver> getAll();
-
-	Driver updateAvailability(Long id, boolean status);
+    DriverResponseDTO registerDriver(DriverRequestDTO requestDTO);
+    DriverResponseDTO getDriverById(Long id);
+    List<DriverResponseDTO> getAllDrivers();
+    DriverResponseDTO updateAvailability(Long id, boolean available);
 }

@@ -1,29 +1,54 @@
 package com.ambulance.SmartAmbulanceTracking.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.ambulance.SmartAmbulanceTracking.ApiResponce.ApiResponse;
-import com.ambulance.SmartAmbulanceTracking.Entity.Patient;
+import com.ambulance.SmartAmbulanceTracking.DTO.PatientRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.PatientResponseDTO;
+
 import com.ambulance.SmartAmbulanceTracking.service.PatientService;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/patient")
-@CrossOrigin
+@RequestMapping("/api/patients")
+@CrossOrigin(origins = "*")
 public class PatientController {
 
-	@Autowired
-	private PatientService service;
+	private final PatientService patientService;
 
-	@GetMapping("/all")
-	public ApiResponse<List<Patient>> getAll() {
-		return new ApiResponse<>(true, "Patients fetched", service.getAll());
+	// REGISTER A NEW PATIENT
+	@PostMapping("/register")
+	public ResponseEntity<ApiResponse<PatientResponseDTO>> register(@RequestBody PatientRequestDTO requestDTO) {
+		PatientResponseDTO response = patientService.registerPatient(requestDTO);
+		return new ResponseEntity<>(new ApiResponse<>(true, "Patient registered successfully.", response),
+				HttpStatus.CREATED);
 	}
 
-	@PostMapping("/save")
-	public ApiResponse<Patient> save(@RequestBody Patient patient) {
-		return new ApiResponse<>(true, "Patient saved", service.save(patient));
+	// GET PATIENT DETAILS BY ID
+	@GetMapping("/{id}")
+	public ResponseEntity<ApiResponse<PatientResponseDTO>> getById(@PathVariable Long id) {
+		PatientResponseDTO response = patientService.getPatientById(id);
+		return ResponseEntity.ok(new ApiResponse<>(true, "Patient details retrieved successfully.", response));
+	}
+
+	// GET ALL PATIENTS
+	@GetMapping("/all")
+	public ResponseEntity<ApiResponse<List<PatientResponseDTO>>> getAll() {
+		List<PatientResponseDTO> response = patientService.getAllPatients();
+		return ResponseEntity.ok(new ApiResponse<>(true, "Patient records retrieved successfully.", response));
+	}
+
+	// UPDATE PATIENT VITALS AND EMERGENCY LEVEL
+	@PutMapping("/{id}/vitals")
+	public ResponseEntity<ApiResponse<PatientResponseDTO>> updateVitals(@PathVariable Long id,
+			@RequestParam String vitals, @RequestParam String emergencyLevel) {
+		PatientResponseDTO response = patientService.updatePatientVitals(id, vitals, emergencyLevel);
+		return ResponseEntity.ok(new ApiResponse<>(true, "Patient vitals updated successfully.", response));
 	}
 }

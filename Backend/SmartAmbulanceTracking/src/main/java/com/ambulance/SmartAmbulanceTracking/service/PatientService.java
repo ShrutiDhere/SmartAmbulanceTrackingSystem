@@ -1,11 +1,15 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
+import com.ambulance.SmartAmbulanceTracking.DTO.PatientRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.PatientResponseDTO;
 import java.util.List;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.Patient;
-
 public interface PatientService {
-	List<Patient> getAll();
+	PatientResponseDTO registerPatient(PatientRequestDTO requestDTO);
 
-	Patient save(Patient patient);
+	PatientResponseDTO getPatientById(Long id);
+
+	List<PatientResponseDTO> getAllPatients();
+
+	PatientResponseDTO updatePatientVitals(Long id, String vitals, String emergencyLevel);
 }

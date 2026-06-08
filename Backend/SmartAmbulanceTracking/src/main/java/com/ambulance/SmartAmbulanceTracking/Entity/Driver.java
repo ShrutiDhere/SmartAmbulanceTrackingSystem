@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "driver")
@@ -13,14 +15,18 @@ public class Driver {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	@NotBlank
 	private String name;
 
 	private String phoneNumber;
 
-	private String email;
-
+	@Column(unique = true)
+	@NotBlank
 	private String licenseNumber;
+
+	@Column(unique = true)
+	@Email
+	private String email;
 
 	private boolean available;
 

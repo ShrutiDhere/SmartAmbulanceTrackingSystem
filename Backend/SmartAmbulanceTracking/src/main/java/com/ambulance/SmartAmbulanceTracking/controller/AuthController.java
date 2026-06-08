@@ -1,58 +1,58 @@
 package com.ambulance.SmartAmbulanceTracking.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ambulance.SmartAmbulanceTracking.ApiResponce.ApiResponse;
+import com.ambulance.SmartAmbulanceTracking.DTO.AuthResponseDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.LoginRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.UserRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.UserResponseDTO;
+import com.ambulance.SmartAmbulanceTracking.security.JwtUtil;
+import com.ambulance.SmartAmbulanceTracking.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.User;
-import com.ambulance.SmartAmbulanceTracking.security.JwtUtil;
-import com.ambulance.SmartAmbulanceTracking.service.UserService;
-
-import jakarta.validation.Valid;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+	private final UserService userService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+	private final JwtUtil jwtUtil;
 
-    // REGISTER
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
+	// REGISTER USER
+	@PostMapping("/register")
+	public ResponseEntity<ApiResponse<UserResponseDTO>> registerUser(@Valid @RequestBody UserRequestDTO requestDTO) {
+		// Keeps everything safe by utilizing the DTO layer instead of direct entity
+		// mapping
+		UserResponseDTO savedUser = userService.registerUser(requestDTO);
 
-        User savedUser = userService.register(user);
+		return new ResponseEntity<>(new ApiResponse<>(true, "User authentication generated successfully.", savedUser),
+				HttpStatus.CREATED);
+	}
 
-        return ResponseEntity.ok(savedUser);
-    }
+	// LOGIN USER
+	@PostMapping("/login")
+	public ResponseEntity<ApiResponse<AuthResponseDTO>> loginUser(@RequestBody LoginRequestDTO loginDTO) {
+		// Step A: Pass primitive credentials down to service layer identity
+		// verification routine
+		UserResponseDTO loggedInUser = userService.login(loginDTO.getEmail(), loginDTO.getPassword());
 
-    // LOGIN
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
+		// Step B: Issue signed cryptographic bearer tokens upon successful verification
+		// pass
+		String token = jwtUtil.generateToken(loggedInUser.getEmail());
 
-        User loggedInUser = userService.login(
-                user.getEmail(),
-                user.getPassword()
-        );
+		// Step C: Assemble secure response envelope properties payload
+		AuthResponseDTO authResponse = new AuthResponseDTO();
+		authResponse.setToken(token);
+		authResponse.setId(loggedInUser.getId());
+		authResponse.setName(loggedInUser.getName());
+		authResponse.setEmail(loggedInUser.getEmail());
+		authResponse.setRole(loggedInUser.getRole());
 
-        String token = jwtUtil.generateToken(
-                loggedInUser.getEmail()
-        );
-
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("token", token);
-        response.put("id", loggedInUser.getId());
-        response.put("name", loggedInUser.getName());
-        response.put("email", loggedInUser.getEmail());
-
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(new ApiResponse<>(true, "Login successful.", authResponse));
+	}
 }

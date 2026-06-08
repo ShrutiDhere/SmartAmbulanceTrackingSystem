@@ -1,98 +1,105 @@
-//package com.ambulance.SmartAmbulanceTracking.service;
-
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import com.ambulance.SmartAmbulanceTracking.Entity.Ambulance;
-//import com.ambulance.SmartAmbulanceTracking.Entity.AmbulanceStatus;
-//import com.ambulance.SmartAmbulanceTracking.repository.AmbulanceRepository;
-//
-//import java.util.Comparator;
-//import java.util.List;
-//
-//@Service
-//public class AmbulanceService {
-//
-//    @Autowired
-//    private AmbulanceRepository repo;
-//
-//    public List<Ambulance> getAll() {
-//        return repo.findAll();
-//    }
-//
-//    public Ambulance updateStatus(Long id, String status) {
-//        Ambulance amb = repo.findById(id).orElseThrow();
-//        amb.setStatus(AmbulanceStatus.valueOf(status));
-//        return repo.save(amb);
-//    }
-//
-//    public List<Ambulance> findNearby(double lat, double lng) {
-//        return repo.findAll().stream()
-//                .filter(a -> a.getStatus() == AmbulanceStatus.AVAILABLE)
-//                .sorted(Comparator.comparingDouble(a ->
-//                        calculateDistance(lat, lng, a.getLatitude(), a.getLongitude())))
-//                .limit(5)
-//                .toList();
-//    }
-//
-//    // Haversine formula (accurate distance)
-//    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-//        double R = 6371; // Earth radius (km)
-//        double dLat = Math.toRadians(lat2 - lat1);
-//        double dLon = Math.toRadians(lon2 - lon1);
-//
-//        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//                Math.cos(Math.toRadians(lat1)) *
-//                        Math.cos(Math.toRadians(lat2)) *
-//                        Math.sin(dLon / 2) *
-//                        Math.sin(dLon / 2);
-//
-//        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//        return R * c;
-//    }
-//}
-
 package com.ambulance.SmartAmbulanceTracking.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.ambulance.SmartAmbulanceTracking.DTO.AmbulanceRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.AmbulanceResponseDTO;
 import com.ambulance.SmartAmbulanceTracking.Entity.*;
-import com.ambulance.SmartAmbulanceTracking.repository.AmbulanceRepository;
-import com.ambulance.SmartAmbulanceTracking.service.AmbulanceServiceImpl;
 import com.ambulance.SmartAmbulanceTracking.exception.ResourceNotFoundException;
+import com.ambulance.SmartAmbulanceTracking.repository.AmbulanceRepository;
+import com.ambulance.SmartAmbulanceTracking.repository.DriverRepository;
 
-import java.util.Comparator;
+import lombok.RequiredArgsConstructor;
+
+import org.modelmapper.ModelMapper;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class AmbulanceServiceImpl implements AmbulanceService {
 
-    @Autowired
-    private AmbulanceRepository repo;
+	private final AmbulanceRepository ambulanceRepository;
 
-    public List<Ambulance> getAll() {
-        return repo.findAll();
-    }
+	private final DriverRepository driverRepository;
 
-    public Ambulance updateStatus(Long id, String status) {
-        Ambulance amb = repo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Ambulance not found"));
+	private final ModelMapper modelMapper;
 
-        amb.setStatus(AmbulanceStatus.valueOf(status));
-        return repo.save(amb);
-    }
+	@Override
+	@Transactional
+	public AmbulanceResponseDTO registerAmbulance(AmbulanceRequestDTO requestDTO) {
+		Driver driver = driverRepository.findById(requestDTO.getDriverId())
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Registration Denied: Driver not found with ID: " + requestDTO.getDriverId()));
 
-    public List<Ambulance> findNearby(double lat, double lng) {
-        return repo.findAll().stream()
-            .filter(a -> a.getStatus() == AmbulanceStatus.AVAILABLE)
-            .sorted(Comparator.comparingDouble(a ->
-                distance(lat, lng, a.getLatitude(), a.getLongitude())))
-            .limit(5)
-            .toList();
-    }
+		Ambulance ambulance = new Ambulance();
+		ambulance.setVehicleNumber(requestDTO.getVehicleNumber());
+		ambulance.setDriver(driver);
+		ambulance.setLatitude(requestDTO.getLatitude());
+		ambulance.setLongitude(requestDTO.getLongitude());
+		ambulance.setSpeed(0.0);
+		ambulance.setCurrentLocation("Base Station");
 
-    private double distance(double lat1, double lon1, double lat2, double lon2) {
-        return Math.sqrt(Math.pow(lat1-lat2,2)+Math.pow(lon1-lon2,2));
-    }
+		// Default initial setup states
+		ambulance.setStatus(AmbulanceStatus.AVAILABLE);
+		ambulance.setLastUpdated(LocalDateTime.now());
+
+		Ambulance savedAmbulance = ambulanceRepository.save(ambulance);
+		return convertToResponseDTO(savedAmbulance);
+	}
+
+	@Override
+	public AmbulanceResponseDTO getAmbulanceById(Long id) {
+		Ambulance ambulance = ambulanceRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Ambulance asset record not found with ID: " + id));
+		return convertToResponseDTO(ambulance);
+	}
+
+	@Override
+	public List<AmbulanceResponseDTO> getAllAmbulances() {
+		return ambulanceRepository.findAll().stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public AmbulanceResponseDTO updateLocation(Long id, double latitude, double longitude, double speed,
+			String locationName) {
+		Ambulance ambulance = ambulanceRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Telemetry failure: Ambulance not found with ID: " + id));
+
+		ambulance.setLatitude(latitude);
+		ambulance.setLongitude(longitude);
+		ambulance.setSpeed(speed);
+		ambulance.setCurrentLocation(locationName);
+		ambulance.setLastUpdated(LocalDateTime.now());
+
+		return convertToResponseDTO(ambulanceRepository.save(ambulance));
+	}
+
+	@Override
+	@Transactional
+	public AmbulanceResponseDTO updateStatus(Long id, AmbulanceStatus status) {
+		Ambulance ambulance = ambulanceRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Status update rejected: Ambulance not found with ID: " + id));
+
+		ambulance.setStatus(status);
+		ambulance.setLastUpdated(LocalDateTime.now());
+
+		return convertToResponseDTO(ambulanceRepository.save(ambulance));
+	}
+
+	// Manual mapping layer fallback to cleanly link flat properties and avoid
+	// ModelMapper edge crashes
+	private AmbulanceResponseDTO convertToResponseDTO(Ambulance ambulance) {
+		AmbulanceResponseDTO dto = modelMapper.map(ambulance, AmbulanceResponseDTO.class);
+		if (ambulance.getDriver() != null) {
+			dto.setDriverId(ambulance.getDriver().getId());
+			dto.setDriverName(ambulance.getDriver().getName());
+			dto.setDriverPhone(ambulance.getDriver().getPhoneNumber());
+		}
+		return dto;
+	}
 }

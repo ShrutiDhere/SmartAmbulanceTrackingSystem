@@ -1,17 +1,13 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.EmergencyRequest;
+import com.ambulance.SmartAmbulanceTracking.DTO.BookingRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.BookingResponseDTO;
+import com.ambulance.SmartAmbulanceTracking.Entity.BookingStatus;
 import java.util.List;
 
 public interface BookingService {
-
-    EmergencyRequest createBooking(EmergencyRequest request);
-
-    EmergencyRequest getById(Long id);
-
-    List<EmergencyRequest> getAll();
-
-    EmergencyRequest cancelBooking(Long id);
-
-    EmergencyRequest updateStatus(Long id, String status);
+    BookingResponseDTO createBooking(BookingRequestDTO requestDTO);
+    BookingResponseDTO getBookingById(Long id);
+    List<BookingResponseDTO> getAllBookings();
+    BookingResponseDTO updateBookingStatus(Long id, BookingStatus status);
 }

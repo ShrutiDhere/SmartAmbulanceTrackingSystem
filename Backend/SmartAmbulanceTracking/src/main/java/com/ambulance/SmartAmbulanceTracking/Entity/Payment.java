@@ -1,6 +1,8 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,12 +13,13 @@ public class Payment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private double amount;
+	private BigDecimal amount;
 
 	@Enumerated(EnumType.STRING)
 	private PaymentStatus status;
 
-	private String paymentMethod;
+	@Enumerated(EnumType.STRING)
+	private PaymentMethod paymentMethod;
 
 	private String transactionId;
 
@@ -34,27 +37,27 @@ public class Payment {
 		this.id = id;
 	}
 
-	public double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(double amount) {
-		this.amount = amount;
+	public void setAmount(BigDecimal d) {
+		this.amount = d;
 	}
 
 	public PaymentStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(PaymentStatus status) {
+	public void setPaymentStatus(PaymentStatus status) {
 		this.status = status;
 	}
 
-	public String getPaymentMethod() {
+	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
 	}
 
-	public void setPaymentMethod(String paymentMethod) {
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
 

@@ -1,104 +1,110 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.ambulance.SmartAmbulanceTracking.DTO.BookingRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.BookingResponseDTO;
 import com.ambulance.SmartAmbulanceTracking.Entity.*;
 import com.ambulance.SmartAmbulanceTracking.exception.ResourceNotFoundException;
 import com.ambulance.SmartAmbulanceTracking.repository.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
+import org.modelmapper.ModelMapper;
+
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
 
-    @Autowired
-    private EmergencyRequestRepository requestRepo;
+	private final BookingRepository bookingRepository;
 
-    @Autowired
-    private AmbulanceRepository ambulanceRepo;
+	private final EmergencyRequestRepository emergencyRepository;
 
-    @Autowired
-    private HospitalRepository hospitalRepo;
+	private final AmbulanceRepository ambulanceRepository;
 
-    @Override
-    public EmergencyRequest createBooking(EmergencyRequest request) {
+	private final PatientRepository patientRepository;
 
-        Ambulance ambulance = ambulanceRepo.findByStatus(AmbulanceStatus.AVAILABLE)
-                .stream()
-                .findFirst()
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("No ambulance available"));
+	private final ModelMapper modelMapper;
 
-        Hospital hospital = hospitalRepo.findByEmergencyAvailableTrue()
-                .stream()
-                .findFirst()
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("No hospital available"));
+	@Override
+	@Transactional
+	public BookingResponseDTO createBooking(BookingRequestDTO requestDTO) {
+		EmergencyRequest emergencyRequest = emergencyRepository.findById(requestDTO.getEmergencyRequestId())
+				.orElseThrow(() -> new ResourceNotFoundException(
+						"Emergency Request not found with ID: " + requestDTO.getEmergencyRequestId()));
 
-        ambulance.setStatus(AmbulanceStatus.BUSY);
+		Patient patient = patientRepository.findById(requestDTO.getPatientId()).orElseThrow(
+				() -> new ResourceNotFoundException("Patient record not found with ID: " + requestDTO.getPatientId()));
 
-        request.setAmbulance(ambulance);
-        request.setHospital(hospital);
-        request.setStatus(EmergencyStatus.PENDING);
-        request.setCreatedAt(LocalDateTime.now());
+		// Strategy Pattern/Business Rule: Assign the first available dispatch vehicle
+		Ambulance availableAmbulance = ambulanceRepository.findAll().stream()
+				.filter(a -> a.getStatus() == AmbulanceStatus.AVAILABLE).findFirst()
+				.orElseThrow(() -> new IllegalStateException("Dispatch Alert: No ambulances are currently available!"));
 
-        ambulanceRepo.save(ambulance);
+		Driver assignedDriver = availableAmbulance.getDriver();
+		if (assignedDriver == null || !assignedDriver.isAvailable()) {
+			throw new IllegalStateException(
+					"Dispatch Assignment Error: Selected ambulance lacks an available designated driver.");
+		}
 
-        return requestRepo.save(request);
-    }
+		// Initialize state engine for booking lifecycle
+		Booking booking = new Booking();
+		booking.setEmergencyRequest(emergencyRequest);
+		booking.setPatient(patient);
+		booking.setAmbulance(availableAmbulance);
+		booking.setDriver(assignedDriver);
+		booking.setStatus(BookingStatus.ASSIGNED);
 
-    @Override
-    public EmergencyRequest getById(Long id) {
-        return requestRepo.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Booking not found"));
-    }
+		// Mutate asset availability states
+		availableAmbulance.setStatus(AmbulanceStatus.BUSY);
+		assignedDriver.setAvailable(false);
 
-    @Override
-    public List<EmergencyRequest> getAll() {
-        return requestRepo.findAll();
-    }
+		ambulanceRepository.save(availableAmbulance);
+		Booking savedBooking = bookingRepository.save(booking);
 
-    @Override
-    public EmergencyRequest cancelBooking(Long id) {
+		return modelMapper.map(savedBooking, BookingResponseDTO.class);
+	}
 
-        EmergencyRequest req = getById(id);
+	@Override
+	@ReadOnlyProperty
+	public BookingResponseDTO getBookingById(Long id) {
+		Booking booking = bookingRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Booking record not found with ID: " + id));
+		return modelMapper.map(booking, BookingResponseDTO.class);
+	}
 
-        req.setStatus(EmergencyStatus.CANCELLED);
+	@Override
+	@ReadOnlyProperty
+	public List<BookingResponseDTO> getAllBookings() {
+		return bookingRepository.findAll().stream().map(booking -> modelMapper.map(booking, BookingResponseDTO.class))
+				.collect(Collectors.toList());
+	}
 
-        Ambulance amb = req.getAmbulance();
+	@Override
+	@Transactional
+	public BookingResponseDTO updateBookingStatus(Long id, BookingStatus status) {
+		Booking booking = bookingRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Booking record not found with ID: " + id));
 
-        if (amb != null) {
-            amb.setStatus(AmbulanceStatus.AVAILABLE);
-            ambulanceRepo.save(amb);
-        }
+		booking.setStatus(status);
 
-        return requestRepo.save(req);
-    }
+		// Handle cascading structural resets if operational flow reaches termination
+		// nodes
+		if (status == BookingStatus.COMPLETED || status == BookingStatus.CANCELLED) {
+			Ambulance ambulance = booking.getAmbulance();
+			Driver driver = booking.getDriver();
 
-    @Override
-    public EmergencyRequest updateStatus(Long id, String status) {
+			if (ambulance != null)
+				ambulance.setStatus(AmbulanceStatus.AVAILABLE);
+			if (driver != null)
+				driver.setAvailable(true);
+		}
 
-        EmergencyRequest req = getById(id);
-
-        EmergencyStatus newStatus =
-                EmergencyStatus.valueOf(status.toUpperCase());
-
-        req.setStatus(newStatus);
-
-        if (newStatus == EmergencyStatus.COMPLETED
-                || newStatus == EmergencyStatus.CANCELLED) {
-
-            Ambulance amb = req.getAmbulance();
-
-            if (amb != null) {
-                amb.setStatus(AmbulanceStatus.AVAILABLE);
-                ambulanceRepo.save(amb);
-            }
-        }
-
-        return requestRepo.save(req);
-    }
+		return modelMapper.map(bookingRepository.save(booking), BookingResponseDTO.class);
+	}
 }

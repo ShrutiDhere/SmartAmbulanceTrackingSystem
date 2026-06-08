@@ -1,20 +1,19 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
+import com.ambulance.SmartAmbulanceTracking.DTO.UserRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.UserResponseDTO;
 import java.util.List;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.User;
-
 public interface UserService {
+	UserResponseDTO registerUser(UserRequestDTO requestDTO);
 
-	User register(User user);
+	UserResponseDTO getUserById(Long id);
 
-	User login(String email, String password);
+	List<UserResponseDTO> getAllUsers();
 
-	List<User> getAll();
+	UserResponseDTO updateUserRole(Long id, String roleStr);
+	UserResponseDTO login(String email, String password);
 
-	User getById(Long id);
-
-	void delete(Long id);
-
-	User save(User user);
+	void deleteUser(Long id);
+	
 }

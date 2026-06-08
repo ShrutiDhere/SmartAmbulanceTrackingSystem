@@ -1,12 +1,15 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
-
-import com.ambulance.SmartAmbulanceTracking.Entity.Notification;
+import com.ambulance.SmartAmbulanceTracking.DTO.NotificationRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.NotificationResponseDTO;
 import java.util.List;
 
 public interface NotificationService {
+	NotificationResponseDTO sendNotification(NotificationRequestDTO requestDTO);
 
-    Notification send(Notification notification);
+	NotificationResponseDTO getNotificationById(Long id);
 
-    List<Notification> getAll();
+	List<NotificationResponseDTO> getUnreadNotificationsByUserId(Long userId);
+
+	NotificationResponseDTO markAsRead(Long id);
 }

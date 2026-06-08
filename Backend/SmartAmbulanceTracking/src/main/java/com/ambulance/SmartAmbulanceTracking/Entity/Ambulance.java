@@ -1,6 +1,8 @@
 package com.ambulance.SmartAmbulanceTracking.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,6 +16,8 @@ public class Ambulance {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(unique = true)
+	@NotBlank
 	private String vehicleNumber;
 
 	@Enumerated(EnumType.STRING)

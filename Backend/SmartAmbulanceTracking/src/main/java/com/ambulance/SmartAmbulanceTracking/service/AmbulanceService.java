@@ -1,11 +1,14 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
+import com.ambulance.SmartAmbulanceTracking.DTO.AmbulanceRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.AmbulanceResponseDTO;
+import com.ambulance.SmartAmbulanceTracking.Entity.AmbulanceStatus;
 import java.util.List;
 
-import com.ambulance.SmartAmbulanceTracking.Entity.Ambulance;
-
 public interface AmbulanceService {
-    List<Ambulance> getAll();
-    Ambulance updateStatus(Long id, String status);
-    List<Ambulance> findNearby(double lat, double lng);
+    AmbulanceResponseDTO registerAmbulance(AmbulanceRequestDTO requestDTO);
+    AmbulanceResponseDTO getAmbulanceById(Long id);
+    List<AmbulanceResponseDTO> getAllAmbulances();
+    AmbulanceResponseDTO updateLocation(Long id, double latitude, double longitude, double speed, String locationName);
+    AmbulanceResponseDTO updateStatus(Long id, AmbulanceStatus status);
 }

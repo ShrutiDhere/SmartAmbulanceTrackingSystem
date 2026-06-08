@@ -1,34 +1,74 @@
 package com.ambulance.SmartAmbulanceTracking.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.ambulance.SmartAmbulanceTracking.DTO.DriverRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.DriverResponseDTO;
 import com.ambulance.SmartAmbulanceTracking.Entity.Driver;
 import com.ambulance.SmartAmbulanceTracking.exception.ResourceNotFoundException;
 import com.ambulance.SmartAmbulanceTracking.repository.DriverRepository;
 
+import lombok.RequiredArgsConstructor;
+
+import org.modelmapper.ModelMapper;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
 @Service
 public class DriverServiceImpl implements DriverService {
 
-    @Autowired
-    private DriverRepository repo;
+	private final DriverRepository driverRepository;
 
-    @Override
-    public List<Driver> getAll() {
-        return repo.findAll();
-    }
+	private final ModelMapper modelMapper;
 
-    @Override
-    public Driver updateAvailability(Long id, boolean status) {
+	@Override
+	@Transactional
+	public DriverResponseDTO registerDriver(DriverRequestDTO requestDTO) {
+		Driver driver = new Driver();
+		driver.setName(requestDTO.getName());
+		driver.setPhoneNumber(requestDTO.getPhoneNumber());
+		driver.setEmail(requestDTO.getEmail());
+		driver.setLicenseNumber(requestDTO.getLicenseNumber());
 
-        Driver driver = repo.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Driver not found"));
+		// Default lifecycle status initialization
+		driver.setAvailable(true);
 
-        driver.setAvailable(status);
+		Driver savedDriver = driverRepository.save(driver);
+		return convertToResponseDTO(savedDriver);
+	}
 
-        return repo.save(driver);
-    }
+	@Override
+	public DriverResponseDTO getDriverById(Long id) {
+		Driver driver = driverRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Driver profile record not found with ID: " + id));
+		return convertToResponseDTO(driver);
+	}
+
+	@Override
+	public List<DriverResponseDTO> getAllDrivers() {
+		return driverRepository.findAll().stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public DriverResponseDTO updateAvailability(Long id, boolean available) {
+		Driver driver = driverRepository.findById(id).orElseThrow(
+				() -> new ResourceNotFoundException("Status adjustment rejected: Driver not found with ID: " + id));
+
+		driver.setAvailable(available);
+		return convertToResponseDTO(driverRepository.save(driver));
+	}
+
+	// Explicit converter mapping to safely query matching ambulance metadata
+	private DriverResponseDTO convertToResponseDTO(Driver driver) {
+		DriverResponseDTO dto = modelMapper.map(driver, DriverResponseDTO.class);
+		if (driver.getAmbulance() != null) {
+			dto.setAmbulanceId(driver.getAmbulance().getId());
+			dto.setVehicleNumber(driver.getAmbulance().getVehicleNumber());
+		}
+		return dto;
+	}
 }

@@ -1,49 +1,53 @@
 package com.ambulance.SmartAmbulanceTracking.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.ambulance.SmartAmbulanceTracking.ApiResponce.ApiResponse;
-import com.ambulance.SmartAmbulanceTracking.Entity.EmergencyRequest;
+import com.ambulance.SmartAmbulanceTracking.DTO.BookingRequestDTO;
+import com.ambulance.SmartAmbulanceTracking.DTO.BookingResponseDTO;
+import com.ambulance.SmartAmbulanceTracking.Entity.BookingStatus;
 import com.ambulance.SmartAmbulanceTracking.service.BookingService;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/booking")
-@CrossOrigin
+@RequestMapping("/api/bookings")
+@CrossOrigin(origins = "*")
 public class BookingController {
 
-	@Autowired
-	private BookingService service;
+	private final BookingService bookingService;
 
-	// 🚑 Create Booking (Emergency Request)
-	@PostMapping("/create")
-	public ApiResponse<EmergencyRequest> create(@RequestBody EmergencyRequest request) {
-		return new ApiResponse<>(true, "Booking created", service.createBooking(request));
+	// CREATE BOOKING
+	@PostMapping("/dispatch")
+	public ResponseEntity<ApiResponse<BookingResponseDTO>> createBooking(@RequestBody BookingRequestDTO requestDTO) {
+		BookingResponseDTO response = bookingService.createBooking(requestDTO);
+		return new ResponseEntity<>(new ApiResponse<>(true, "Booking created successfully.", response),
+				HttpStatus.CREATED);
 	}
 
-	// 📄 Get booking by ID
+	// GET BOOKING BY ID
 	@GetMapping("/{id}")
-	public ApiResponse<EmergencyRequest> getById(@PathVariable Long id) {
-		return new ApiResponse<>(true, "Booking found", service.getById(id));
+	public ResponseEntity<ApiResponse<BookingResponseDTO>> getBookingById(@PathVariable Long id) {
+		BookingResponseDTO response = bookingService.getBookingById(id);
+		return ResponseEntity.ok(new ApiResponse<>(true, "Booking details retrieved successfully.", response));
 	}
 
-	// 📜 Get all bookings
+	// GET ALL BOOKINGS
 	@GetMapping("/all")
-	public ApiResponse<List<EmergencyRequest>> getAll() {
-		return new ApiResponse<>(true, "All bookings", service.getAll());
+	public ResponseEntity<ApiResponse<List<BookingResponseDTO>>> getAllBookings() {
+		List<BookingResponseDTO> response = bookingService.getAllBookings();
+		return ResponseEntity.ok(new ApiResponse<>(true, "All booking records retrieved successfully.", response));
 	}
 
-	// ❌ Cancel booking
-	@PutMapping("/{id}/cancel")
-	public ApiResponse<EmergencyRequest> cancel(@PathVariable Long id) {
-		return new ApiResponse<>(true, "Booking cancelled", service.cancelBooking(id));
-	}
-
-	// 🔄 Update status (ASSIGNED / ARRIVED / COMPLETED)
+	// UPDATE BOOKING STATUS
 	@PutMapping("/{id}/status")
-	public ApiResponse<EmergencyRequest> updateStatus(@PathVariable Long id, @RequestParam String status) {
-		return new ApiResponse<>(true, "Status updated", service.updateStatus(id, status));
+	public ResponseEntity<ApiResponse<BookingResponseDTO>> updateStatus(@PathVariable Long id,
+			@RequestParam BookingStatus status) {
+		BookingResponseDTO response = bookingService.updateBookingStatus(id, status);
+		return ResponseEntity.ok(new ApiResponse<>(true, "Booking status updated to: " + status, response));
 	}
 }
