@@ -1,0 +1,440 @@
+/* ============================================
+   LIVE TRACKING STYLES
+   ============================================ */
+
+.tracking-container {
+  position: relative;
+  height: 100vh;
+  background: white;
+}
+
+.tracking-map {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.tracking-overlay {
+  position: absolute;
+  inset: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  pointer-events: none;
+}
+
+.tracking-top {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  pointer-events: auto;
+}
+
+.tracking-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+}
+
+.tracking-status {
+  background: var(--gradient-primary);
+  color: white;
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+}
+
+.status-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.tracking-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.tracking-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin-top: 4px;
+}
+
+.driver-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: var(--shadow-lg);
+}
+
+.driver-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.driver-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff5d5d, #ff8787);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 36px;
+  flex-shrink: 0;
+}
+
+.driver-details {
+  flex: 1;
+}
+
+.driver-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.driver-vehicle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.driver-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.rating-star {
+  color: #ffc107;
+}
+
+.driver-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.driver-actions .btn {
+  margin: 0;
+}
+
+/* ============================================
+   TRACKING BOTTOM SHEET
+   ============================================ */
+
+.tracking-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  padding: 24px;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15);
+  max-height: 40vh;
+  overflow-y: auto;
+  animation: slideInUp 400ms ease-out;
+}
+
+.route-info {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.route-point {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+}
+
+.route-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.route-marker.pickup {
+  background: #e3f2fd;
+  color: #0066cc;
+}
+
+.route-marker.ambulance {
+  background: #ffebee;
+  color: #ff5d5d;
+}
+
+.route-marker.hospital {
+  background: #e8f5e9;
+  color: #4ddb8f;
+}
+
+.route-point-content h4 {
+  margin-bottom: 4px;
+}
+
+.route-point-content p {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* ============================================
+   PAGINATION & STEPPER
+   ============================================ */
+
+.page-indicator {
+  text-align: center;
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* ============================================
+   HEADER WITH STATUS
+   ============================================ */
+
+.tracking-header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: white;
+  padding: 16px 24px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.tracking-header h3 {
+  margin-bottom: 0;
+  font-size: 1.1rem;
+}
+
+/* ============================================
+   EMERGENCY BUTTONS
+   ============================================ */
+
+.emergency-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+.emergency-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: var(--shadow-lg);
+  transition: all var(--transition-fast);
+  background: white;
+}
+
+.emergency-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-xl);
+}
+
+.emergency-btn.call {
+  color: #4ddb8f;
+}
+
+.emergency-btn.message {
+  color: #0066cc;
+}
+
+.emergency-btn.cancel {
+  color: #ff5d5d;
+}
+
+/* ============================================
+   PROGRESS & ANIMATION
+   ============================================ */
+
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.35s;
+  transform-origin: 50% 50%;
+  stroke-dashoffset: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .tracking-overlay {
+    inset: 15px;
+    gap: 15px;
+  }
+
+  .tracking-top {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-bottom {
+    max-height: 50vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .tracking-container {
+    height: calc(100vh - 60px);
+  }
+
+  .tracking-overlay {
+    inset: 10px;
+    gap: 10px;
+  }
+
+  .tracking-top {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-card {
+    padding: 16px;
+  }
+
+  .tracking-header {
+    top: 10px;
+    left: 10px;
+    padding: 12px 16px;
+  }
+
+  .emergency-buttons {
+    top: 10px;
+    right: 10px;
+    flex-direction: row;
+  }
+
+  .emergency-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .tracking-bottom {
+    max-height: 60vh;
+  }
+
+  .driver-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tracking-overlay {
+    display: flex;
+    flex-direction: column;
+    inset: 8px;
+  }
+
+  .tracking-top {
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .tracking-card,
+  .tracking-status {
+    padding: 12px;
+  }
+
+  .tracking-title {
+    font-size: 1.2rem;
+  }
+
+  .tracking-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: calc(100vh - 200px);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  }
+
+  .driver-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .driver-avatar-large {
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+  }
+
+  .emergency-buttons {
+    flex-direction: row;
+    right: 8px;
+  }
+
+  .emergency-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+}
