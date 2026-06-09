@@ -1,4 +1,4 @@
-    import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import InputField from "../components/InputField";
@@ -92,8 +92,7 @@ export default function Login() {
       }
 
       showToast(
-        `Welcome Back ${
-          user?.name || ""
+        `Welcome Back ${user?.name || ""
         }`,
         "success"
       );
@@ -117,11 +116,11 @@ export default function Login() {
             🚑 AI Based Smart Ambulance Tracking System
           </div>
 
-         <h1>
-AI Based
-Smart Ambulance
-Tracking System
-</h1>
+          <h1>
+            AI Based
+            Smart Ambulance
+            Tracking System
+          </h1>
 
           <p>
             Real-time ambulance booking,

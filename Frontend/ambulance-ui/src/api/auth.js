@@ -3,16 +3,15 @@ import api, { setAuthToken } from "./api";
 export const loginRequest = async (payload) => {
   try {
     const response = await api.post("/auth/login", payload);
-    if (response.data.token || response.data.accessToken) {
-      return response.data;
-    }
-    throw new Error("No authentication token received");
+
+    return response.data.data;
   } catch (error) {
     const errorMsg =
       error.response?.data?.message ||
       error.response?.data?.error ||
       error.message ||
-      "Login failed. Please try again.";
+      "Login failed";
+
     throw new Error(errorMsg);
   }
 };
@@ -20,16 +19,15 @@ export const loginRequest = async (payload) => {
 export const registerRequest = async (payload) => {
   try {
     const response = await api.post("/auth/register", payload);
-    if (response.data.token || response.data.accessToken) {
-      return response.data;
-    }
-    throw new Error("No authentication token received");
+
+    return response.data.data;
   } catch (error) {
     const errorMsg =
       error.response?.data?.message ||
       error.response?.data?.error ||
       error.message ||
-      "Registration failed. Please try again.";
+      "Registration failed";
+
     throw new Error(errorMsg);
   }
 };

@@ -54,18 +54,24 @@ export const AuthProvider = ({ children }) => {
   const login = async (payload) => {
     setLoading(true);
     setError(null);
+
     try {
       const data = await loginRequest(payload);
-      const authToken = data.token || data.accessToken;
-      if (!authToken) {
-        throw new Error("No authentication token received from server");
-      }
-      const authUser = data.user || parseJwt(authToken);
-      setToken(authToken);
+
+      const authUser = {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        role: data.role,
+      };
+
+      setToken(data.token);
       setUser(authUser);
+
       return authUser;
     } catch (err) {
-      const errorMsg = err.message || "Login failed. Please try again.";
+      const errorMsg = err.message || "Login failed";
+
       setError(errorMsg);
       throw err;
     } finally {
@@ -73,21 +79,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
   const register = async (payload) => {
     setLoading(true);
     setError(null);
+
     try {
       const data = await registerRequest(payload);
-      const authToken = data.token || data.accessToken;
-      if (!authToken) {
-        throw new Error("No authentication token received from server");
-      }
-      const authUser = data.user || parseJwt(authToken);
-      setToken(authToken);
-      setUser(authUser);
-      return authUser;
+
+      return data;
     } catch (err) {
-      const errorMsg = err.message || "Registration failed. Please try again.";
+      const errorMsg =
+        err.message || "Registration failed";
+
       setError(errorMsg);
       throw err;
     } finally {

@@ -11,7 +11,6 @@ import {
   validateEmail,
   validatePassword,
   validateConfirmPassword,
-  validateAddress,
   isFormValid,
 } from "../utils/validation";
 
@@ -31,8 +30,7 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
-    address: "",
-    role: "USER",
+    role: "PATIENT",
   });
 
   const [errors, setErrors] = useState({
@@ -40,7 +38,6 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
-    address: "",
   });
 
   const [apiError, setApiError] = useState("");
@@ -75,7 +72,6 @@ export default function Register() {
       setApiError("");
     }
   };
-
   const validateForm = () => {
     const newErrors = {
       name: validateName(formData.name),
@@ -89,9 +85,6 @@ export default function Register() {
           formData.password,
           formData.confirmPassword
         ),
-      address: validateAddress(
-        formData.address
-      ),
     };
 
     setErrors(newErrors);
@@ -99,30 +92,38 @@ export default function Register() {
     return isFormValid(newErrors);
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    console.log("Register button clicked");
+
+    if (!validateForm()) {
+      console.log("Validation failed");
+      return;
+    }
+
+    console.log("Validation passed");
 
     try {
-      const user = await register({
+      await register({
         name: formData.name.trim(),
         email: formData.email.trim(),
         password: formData.password,
-        address: formData.address.trim(),
         role: formData.role,
       });
 
       showToast(
-        `Welcome ${user?.name || ""}`,
+        "Registration successful. Please login.",
         "success"
       );
 
-      navigate("/");
+      navigate("/login");
+
     } catch (err) {
       setApiError(
         err.message ||
-          "Registration failed"
+        "Registration failed"
       );
     }
   };
@@ -141,10 +142,10 @@ export default function Register() {
           </div>
 
           <h1>
-AI Based
-Smart Ambulance
-Tracking System
-</h1>
+            AI Based
+            Smart Ambulance
+            Tracking System
+          </h1>
 
           <p>
             Register today and gain
@@ -262,20 +263,6 @@ Tracking System
               }
               error={errors.email}
             />
-
-            <InputField
-              label="Address"
-              placeholder="Enter Address"
-              value={formData.address}
-              onChange={(e) =>
-                handleInputChange(
-                  "address",
-                  e.target.value
-                )
-              }
-              error={errors.address}
-            />
-
             <InputField
               label="Password"
               type="password"
@@ -322,14 +309,16 @@ Tracking System
                   )
                 }
               >
-                <option value="USER">
-                  User
+                <option value="PATIENT">
+                  Patient
                 </option>
 
                 <option value="DRIVER">
                   Ambulance Driver
                 </option>
-
+                <option value="HOSPITAL">
+                  Hospital
+                </option>
                 <option value="ADMIN">
                   Administrator
                 </option>
@@ -360,6 +349,7 @@ Tracking System
           </Link>
 
         </div>
+
 
       </div>
 
