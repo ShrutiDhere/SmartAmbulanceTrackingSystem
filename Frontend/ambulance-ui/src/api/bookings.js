@@ -1,21 +1,35 @@
 import api from "./api";
 
-export const createBookingRequest = async (payload) => {
-  const response = await api.post("/bookings/create", payload);
-  return response.data;
+// Aligned with POST: /api/bookings/dispatch
+export const createBooking = async (bookingPayload) => {
+  try {
+    // Aligns perfectly with @PostMapping("/dispatch") inside BookingController
+    const response = await api.post("/bookings/dispatch", bookingPayload);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Booking dispatch transaction failed.");
+  }
 };
 
-export const fetchUserBookings = async (userId) => {
-  const response = await api.get(`/bookings/user/${userId}`);
-  return response.data;
+// Aligned with GET: /api/bookings/{id}
+export const getBookingById = async (id) => {
+  try {
+    const response = await api.get(`/bookings/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Failed to fetch booking details");
+  }
 };
 
-export const updateDriverLocationRequest = async (payload) => {
-  const response = await api.put("/driver/location", payload);
-  return response.data;
+// Aligned with GET: /api/bookings/all
+export const getAllBookings = async () => {
+  return await api.get("/bookings/all");
 };
 
-export const updateBookingStatusRequest = async (payload) => {
-  const response = await api.put("/bookings/status", payload);
-  return response.data;
+// Aligned with PUT: /api/bookings/{id}/status
+// Expects RequestParam: status (BookingStatus Enum value e.g. "ACCEPTED", "COMPLETED")
+export const updateBookingStatus = async (id, status) => {
+  return await api.put(`/bookings/${id}/status`, null, {
+    params: { status },
+  });
 };

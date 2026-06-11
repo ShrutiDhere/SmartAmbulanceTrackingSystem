@@ -18,7 +18,10 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
-                        "/api/**"
+                        "/api/**",
+                        // 🚨 FIX: Allows the real-time handshake request to bypass security filters
+                        "/ambulance-tracking",
+                        "/ambulance-tracking/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             );
