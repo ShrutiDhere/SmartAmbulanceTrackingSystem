@@ -10,4 +10,5 @@ public interface BookingService {
     BookingResponseDTO getBookingById(Long id);
     List<BookingResponseDTO> getAllBookings();
     BookingResponseDTO updateBookingStatus(Long id, BookingStatus status);
+    List<BookingResponseDTO> getActiveBookingsForDriver(Long driverId);
 }

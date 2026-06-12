@@ -107,4 +107,20 @@ public class BookingServiceImpl implements BookingService {
 
 		return modelMapper.map(bookingRepository.save(booking), BookingResponseDTO.class);
 	}
+	// Add this method to your existing BookingServiceImpl class
+    @Override
+    @ReadOnlyProperty
+    public List<BookingResponseDTO> getActiveBookingsForDriver(Long driverId) {
+        // Query assignments that are either ASSIGNED, ACCEPTED, or IN_PROGRESS
+        List<BookingStatus> activeStatuses = List.of(
+            BookingStatus.ASSIGNED, 
+            BookingStatus.ACCEPTED, 
+            BookingStatus.IN_PROGRESS
+        );
+        
+        return bookingRepository.findByDriverIdAndStatusIn(driverId, activeStatuses)
+                .stream()
+                .map(booking -> modelMapper.map(booking, BookingResponseDTO.class))
+                .collect(Collectors.toList());
+    }
 }
