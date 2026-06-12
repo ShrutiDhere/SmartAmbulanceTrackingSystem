@@ -50,4 +50,10 @@ public class BookingController {
 		BookingResponseDTO response = bookingService.updateBookingStatus(id, status);
 		return ResponseEntity.ok(new ApiResponse<>(true, "Booking status updated to: " + status, response));
 	}
+	//  get  getActiveDriverBookings
+    @GetMapping("/driver/{driverId}/active")
+    public ResponseEntity<ApiResponse<List<BookingResponseDTO>>> getActiveDriverBookings(@PathVariable Long driverId) {
+        List<BookingResponseDTO> response = bookingService.getActiveBookingsForDriver(driverId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Active driver assignments retrieved successfully.", response));
+    }
 }
